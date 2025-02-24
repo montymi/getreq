@@ -16,6 +16,13 @@ check_dependencies() {
                     exit 1
                 fi
                 brew install "$dep"
+            elif [[ "$OSTYPE" == "msys" ]]; then
+                echo "Installing '$dep' using Chocolatey..."
+                if ! command -v choco &> /dev/null; then
+                    echo "Chocolatey is not installed. Please install Chocolatey first: https://chocolatey.org/install"
+                    exit 1
+                fi
+                choco install "$dep" -y
             else
                 echo "Unsupported OS. Please install '$dep' manually."
                 exit 1
@@ -52,4 +59,3 @@ fi
 
 # Cleanup
 rm "$TMP_FILE"
-
