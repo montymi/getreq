@@ -86,12 +86,15 @@ git --version && python --version && pip --version
 
 Download and navigate into the repository:
 ```bash
-git clone https://github.com/montymi/ClearDocs/ && cd ClearDocs
+git clone https://github.com/montymi/getreq.git
+cd getreq
 ```
 
 ### Setup
 
-Development setup supports Python 3.9–3.14 on Linux, macOS, and Windows.
+The development dependencies target Python 3.9–3.14 on Linux, macOS, and Windows.
+For new environments, prefer a maintained Python version (3.10 or newer).
+Python 3.9 remains in the compatibility matrix for existing installations.
 Install Python with pip and venv support, then run from the repository:
 
 ```bash
@@ -115,7 +118,48 @@ venv separately, install your distribution's Python venv package first.
 An existing `.venv` keeps its original Python version. To switch versions, move
 it aside and rerun `setup_env.py` with the desired Python interpreter. Dependencies
 use compatible version ranges so pip can select releases for that interpreter.
-The CI matrix checks Python 3.9–3.14 across all three operating systems.
+The [CI matrix](https://github.com/montymi/getreq/actions/workflows/compatibility.yml)
+checks Python 3.9–3.14 on Ubuntu 22.04, macOS, and Windows. Each job installs
+dependencies twice, checks them with pip, and builds the README using MkDocs.
+A configured matrix alone does not establish that every job has passed.
+
+### Verify the installation
+
+```bash
+# Linux / macOS
+.venv/bin/python -m pip check
+.venv/bin/python tests/smoke.py
+```
+
+```powershell
+# Windows
+.venv\Scripts\python.exe -m pip check
+.venv\Scripts\python.exe tests/smoke.py
+```
+
+The smoke check exercises Click, TOML parsing, Markdown rendering, and a strict
+MkDocs build. It verifies the generated HTML and removes its temporary files.
+There is no application CLI or repository-level MkDocs configuration yet.
+
+### Troubleshooting
+
+- **CI says Python 3.9 was not found for Ubuntu 26.04:** `ubuntu-latest`
+  migrated to Ubuntu 26.04. The workflow pins `ubuntu-22.04`, for which GitHub
+  publishes all six Python versions. This is a runner availability failure
+  before dependency installation; rerunning on the same unsupported runner
+  will not resolve it.
+- **`ensurepip` or `venv` is unavailable on Linux:** install the venv package
+  matching your Python version through your distribution, then move aside the
+  incomplete `.venv` and rerun setup. For example, Python 3.13 on Debian/Ubuntu
+  may require `python3.13-venv`.
+- **`.venv` uses the wrong Python version or is incomplete:** move it aside
+  and rerun setup with the desired interpreter. Virtual environments cannot
+  be copied between operating systems.
+- **PowerShell blocks activation scripts:** activation is optional. Run
+  `.venv\Scripts\python.exe` directly as shown above.
+- **Installation fails:** retain the pip error output and check network access
+  to PyPI. Setup returns a nonzero exit status when installation or dependency
+  checks fail; do not treat a created `.venv` alone as a successful setup.
 
 
 Convert contents of README.md to the raw form, copy file and paste into your project. (Boring ik, that is a WIP for after the holidays 😊.)
@@ -144,28 +188,22 @@ TODO; Check [Tasks](#tasks) for updates coming soon!
 
 Less than 6% of GitHub projects include documentation or diagrams about the software's architecture. Since larger projects can often have a very convoluted source code structure, diagrams are the ideal method of displaying the flow of the project. 
 
-```
-ClearDocs
+The current checkout contains:
+
+```text
+getreq/
+├── .github/workflows/compatibility.yml
 ├── README.md
-├── src
-│   ├── __init__.py
-│   ├── cli.py
-│   └── utils.py
-└── docs
-    ├── index.md
-    ├── installation.md
-    ├── usage.md
-    ├── configuration.md
-    ├── contributing.md
-    ├── api
-    │   └── overview.md
-    ├── tutorials
-    │   ├── getting_started.md
-    │   └── advanced_features.md
-    └── references
-        ├── glossary.md
-        └── faq.md
+├── LICENSE.txt
+├── requirements.txt
+├── setup_env.py
+├── script.sh
+└── tests/
+    └── smoke.py
 ```
+
+`setup_env.py` creates the local `.venv`. `script.sh` delegates to that installer
+for Bash users. The `src/` and `docs/` application layout is planned work.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -186,7 +224,7 @@ By publicly displaying the to-do list of the project, users are able to see any 
 - [ ] Automate deployment to gh-pages through CLI
 - [ ] package and post to PIP
 
-See the [open issues](https://github.com/montymi/ClearDocs/issues) for a full list of issues and proposed features.
+See the [open issues](https://github.com/montymi/getreq/issues) for a full list of issues and proposed features.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -239,11 +277,11 @@ Use this space to list any resources used or that may be helpful in understandin
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [demoLogo]: https://img.shields.io/badge/🚀%20Explore%20Demo-grey?style=for-the-badge
-[demoLogo-url]: https://github.com/montymi/ClearDocs
+[demoLogo-url]: https://github.com/montymi/getreq
 [bugLogo]: https://img.shields.io/badge/🐛%20Report%20Bug-grey?style=for-the-badge
-[bugLogo-url]: https://github.com/montymi/ClearDocs/issues
+[bugLogo-url]: https://github.com/montymi/getreq/issues
 [featureLogo]: https://img.shields.io/badge/✨%20Request%20Feature-grey?style=for-the-badge
-[featureLogo-url]: https://github.com/montymi/ClearDocs/issues
+[featureLogo-url]: https://github.com/montymi/getreq/issues
 [pythonLogo]: https://img.shields.io/badge/Python-black?style=for-the-badge&logo=python&logoColor=natural
 [pythonLogo-url]: https://python.org/
 [markdownLogo]: https://img.shields.io/badge/Markdown-black?style=for-the-badge&logo=markdown&logoColor=natural
@@ -253,15 +291,15 @@ Use this space to list any resources used or that may be helpful in understandin
 [creatorLogo]: https://img.shields.io/badge/-Created%20by%20montymi-maroon.svg?style=for-the-badge
 [creatorProfile]: https://montymi.com/
 [contributors-shield]: https://img.shields.io/github/contributors/montymi/ClearDocs.svg?style=for-the-badge
-[contributors-url]: https://github.com/montymi/ClearDocs/graphs/contributors
+[contributors-url]: https://github.com/montymi/getreq/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/montymi/ClearDocs.svg?style=for-the-badge
-[forks-url]: https://github.com/montymi/ClearDocs/network/members
+[forks-url]: https://github.com/montymi/getreq/network/members
 [stars-shield]: https://img.shields.io/github/stars/montymi/ClearDocs.svg?style=for-the-badge
-[stars-url]: https://github.com/montymi/ClearDocs/stargazers
+[stars-url]: https://github.com/montymi/getreq/stargazers
 [issues-shield]: https://img.shields.io/github/issues/montymi/ClearDocs.svg?style=for-the-badge
-[issues-url]: https://github.com/montymi/ClearDocs/issues
+[issues-url]: https://github.com/montymi/getreq/issues
 [license-shield]: https://img.shields.io/github/license/montymi/ClearDocs.svg?style=for-the-badge
-[license-url]: https://github.com/montymi/ClearDocs/blob/master/LICENSE.txt
+[license-url]: https://github.com/montymi/getreq/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin
 [linkedin-url]: https://linkedin.com/in/michael-montanaro
 [github-shield]: https://img.shields.io/badge/-GitHub-black.svg?style=for-the-badge&logo=github

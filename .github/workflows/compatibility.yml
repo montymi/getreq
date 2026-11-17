@@ -7,7 +7,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # Python 3.9 builds are unavailable on Ubuntu 26.04.
+        os: [ubuntu-22.04, macos-latest, windows-latest]
         python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     runs-on: ${{ matrix.os }}
     steps:
