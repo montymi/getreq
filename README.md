@@ -91,6 +91,33 @@ git clone https://github.com/montymi/ClearDocs/ && cd ClearDocs
 
 ### Setup
 
+Development setup supports Python 3.9–3.14 on Linux, macOS, and Windows.
+Install Python with pip and venv support, then run from the repository:
+
+```bash
+# Linux / macOS
+python3 setup_env.py
+source .venv/bin/activate
+```
+
+```powershell
+# Windows (PowerShell or Command Prompt)
+py -3 setup_env.py
+# Activation is optional; use the environment interpreter directly:
+.venv\Scripts\python.exe -m pip check
+```
+
+The installer creates `.venv`, installs the requirements, and checks dependency
+compatibility. It can be rerun and works from any working directory. `bash script.sh` remains available on systems with Bash. No administrator privileges,
+Homebrew, cowsay, or lolcat are required. On Linux distributions that package
+venv separately, install your distribution's Python venv package first.
+
+An existing `.venv` keeps its original Python version. To switch versions, move
+it aside and rerun `setup_env.py` with the desired Python interpreter. Dependencies
+use compatible version ranges so pip can select releases for that interpreter.
+The CI matrix checks Python 3.9–3.14 across all three operating systems.
+
+
 Convert contents of README.md to the raw form, copy file and paste into your project. (Boring ik, that is a WIP for after the holidays 😊.)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
